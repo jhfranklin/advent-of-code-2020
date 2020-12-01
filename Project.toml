@@ -1,0 +1,7 @@
+name = "AdventOfCode2020"
+uuid = "4d62e7f0-6c90-45f3-b4d3-829328b6ad5e"
+authors = ["Jack Franklin <jackhenryfranklin@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
