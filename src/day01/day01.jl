@@ -1,7 +1,7 @@
 using AdventOfCode2020
 using Base.Iterators
 
-getInput() = [parse(Int,x) for x in vec(importData(1,true))]
+getInput() = [parse(Int,x) for x ∈ vec(importData(1,true))]
 
 function part1()
     input = getInput() 
@@ -10,8 +10,8 @@ end
 
 function part2(input)
    input = sort(input)
-    for i in input
-        for j in input
+    for i ∈ input
+        for j ∈ input
             j >= (2020 - i) && break
             k = 2020 - (i + j)
             location = searchsortedfirst(input, k)
