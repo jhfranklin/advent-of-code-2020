@@ -1,6 +1,6 @@
 using AdventOfCode2020
 
-getInput() = vec(importData(2,true,'\n'))
+getInput() = readlines(getInputPath(2))
 
 function checkPassword(input::String)
     parsed = split(input,' ')
@@ -24,3 +24,6 @@ end
 
 part1(input) = sum([checkPassword(x) for x in input])
 part2(input) = sum([checkPassword2(x) for x in input])
+
+println("part 1: ", part1(getInput()))
+println("part 2: ", part2(getInput()))

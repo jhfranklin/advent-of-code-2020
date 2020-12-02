@@ -1,10 +1,9 @@
 using AdventOfCode2020
 using Base.Iterators
 
-getInput() = [parse(Int,x) for x ∈ vec(importData(1,true))]
+getInput() = parse.(Int, readlines(getInputPath(1)))
 
-function part1()
-    input = getInput() 
+function part1(input) 
     return [i*j for (i,j) ∈ product(input,input) if i+j == 2020][1]
 end
 
@@ -20,5 +19,5 @@ function part2(input)
     end
 end
 
-println("part 1: ", part1())
+println("part 1: ", part1(getInput()))
 println("part 2: ", part2(getInput()))
