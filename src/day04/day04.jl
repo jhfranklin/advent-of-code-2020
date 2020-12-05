@@ -11,14 +11,9 @@ function hasFields(passport::AbstractString)
     return hasFields(convertPassport(passport))
 end
 
-function part1()
-    input = getInput()
-    return sum(hasFields.(input))
-end
-
 function convertPassport(passport)
     data = Dict{String,String}()
-    for match in eachmatch(r"(.{3}):([#\w]+)", passport)
+    for match ∈ eachmatch(r"(.{3}):([#\w]+)", passport)
         data[match.captures[1]] = match.captures[2]
     end
     return data
@@ -52,15 +47,15 @@ function check_hgt(hgt)
 end
 
 function check_hcl(hcl)
-    return (hcl[1] == '#') && occursin(r"(?<!.)[0-9a-f]{6}(?!.)",hcl[2:end])
+    return (hcl[1] == '#') && occursin(r"(?<!.)[0-9a-f]{6}(?!.)", hcl[2:end])
 end
 
 function check_ecl(ecl)
-    return occursin(r"(?<!.)(amb|blu|brn|gry|grn|hzl|oth)(?!.)",ecl)
+    return occursin(r"(?<!.)(amb|blu|brn|gry|grn|hzl|oth)(?!.)", ecl)
 end
 
 function check_pid(pid)
-    return occursin(r"(?<!.)([0-9]{9})(?!.)",pid)
+    return occursin(r"(?<!.)([0-9]{9})(?!.)", pid)
 end
 
 function checkPassportIsValid(data::Dict{String,String})
@@ -78,10 +73,8 @@ function checkPassportIsValid(passport::AbstractString)
     return checkPassportIsValid(convertPassport(passport))
 end
 
-function part2()
-    input = getInput()
-    return sum(checkPassportIsValid.(input))
-end
+part1() = sum(hasFields.(getInput()))
+part2() = sum(checkPassportIsValid.(getInput()))
 
 println("part 1:", part1())
 println("part 2:", part2())
