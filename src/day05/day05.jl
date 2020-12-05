@@ -2,15 +2,13 @@ using AdventOfCode2020
 
 getInput() = readlines(getInputPath(5))
 
-function convert(x)
-    bin = Dict{Char,Char}('R'=>'1','L'=>'0','F'=>'0','B'=>'1')
-    rowString = x[1:end-3]
-    colString = x[end-2:end]
-    rowBin = join([bin[i] for i in rowString])
-    colBin = join([bin[i] for i in colString])
-    row = parse(Int,rowBin,base=2)
-    col = parse(Int,colBin,base=2)
-    return (row*8) + col
+function convert(input)
+    binary = replace(replace(input, r"R|B" => "1"), r"L|F" => "0")
+    rowBin = binary[1:end-3]
+    colBin = binary[end-2:end]
+    y = parse(Int, rowBin, base=2)
+    x = parse(Int, colBin, base=2)
+    return 8y + x
 end
 
 function part1()
@@ -23,6 +21,9 @@ function part2()
     convertedInput = convert.(input)
     sortedIDs = sort(convertedInput)
     diffedIDs = diff(sortedIDs)
-    gapLocation = findfirst(isequal(2),diffedIDs)
+    gapLocation = findfirst(isequal(2), diffedIDs)
     return sortedIDs[gapLocation] + 1
 end
+
+println("part 1: ", part1())
+println("part 2: ", part2())
