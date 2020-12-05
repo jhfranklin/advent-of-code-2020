@@ -73,8 +73,8 @@ function checkPassportIsValid(passport::AbstractString)
     return checkPassportIsValid(convertPassport(passport))
 end
 
-part1() = sum(hasFields.(getInput()))
-part2() = sum(checkPassportIsValid.(getInput()))
+part1() = getInput() .|> hasFields |> sum
+part2() = getInput() .|> checkPassportIsValid |> sum
 
 println("part 1:", part1())
 println("part 2:", part2())
