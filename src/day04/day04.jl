@@ -47,15 +47,15 @@ function check_hgt(hgt)
 end
 
 function check_hcl(hcl)
-    return (hcl[1] == '#') && occursin(r"(?<!.)[0-9a-f]{6}(?!.)", hcl[2:end])
+    return occursin(r"^#[\da-f]{6}$", hcl)
 end
 
 function check_ecl(ecl)
-    return occursin(r"(?<!.)(amb|blu|brn|gry|grn|hzl|oth)(?!.)", ecl)
+    return occursin(r"^amb|blu|brn|gry|grn|hzl|oth$", ecl)
 end
 
 function check_pid(pid)
-    return occursin(r"(?<!.)([0-9]{9})(?!.)", pid)
+    return occursin(r"^\d{9}$", pid)
 end
 
 function checkPassportIsValid(data::Dict{String,String})
