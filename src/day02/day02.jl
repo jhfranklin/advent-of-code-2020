@@ -2,28 +2,31 @@ using AdventOfCode2020
 
 getInput() = readlines(getInputPath(2))
 
-function checkPassword(input::String)
-    parsed = split(input,' ')
-    minNum = parse(Int,parsed[1][1:findfirst('-',parsed[1])-1])
-    maxNum = parse(Int,parsed[1][findfirst('-',parsed[1])+1:end])
-    letter = parsed[2][1]
-    password = parsed[3]
-    numInPassword = length(filter(isequal(letter),collect(password)))
-    return (numInPassword >= minNum) & (numInPassword <= maxNum)
+function parseRow(row)
+    m = match(r"(\d+)-(\d+) (\w): (\w+)", row)
+    return tuple(m.captures...)
+end
+
+function checkPasswordPart1(input::String)
+    parsed = parseRow(input)
+    minNum, maxNum = parse.(Int,parsed[1:2])
+    (letter,) = parsed[3]
+    password = parsed[4]
+    numInPassword = count(isequal(letter),collect(password))
+    return (numInPassword >= minNum) && (numInPassword <= maxNum)
 end 
 
 
-function checkPassword2(input::String)
-    parsed = split(input,' ')
-    minNum = parse(Int,parsed[1][1:findfirst('-',parsed[1])-1])
-    maxNum = parse(Int,parsed[1][findfirst('-',parsed[1])+1:end])
-    letter = parsed[2][1]
-    password = parsed[3]
+function checkPasswordPart2(input::String)
+    parsed = parseRow(input)
+    minNum, maxNum = parse.(Int,parsed[1:2])
+    (letter,) = parsed[3]
+    password = parsed[4]
     return (password[minNum] == letter) ⊻ (password[maxNum] == letter)
 end 
 
-part1(input) = sum([checkPassword(x) for x in input])
-part2(input) = sum([checkPassword2(x) for x in input])
+part1() = getInput() .|> checkPasswordPart1 |> sum 
+part2() = getInput() .|> checkPasswordPart2 |> sum 
 
-println("part 1: ", part1(getInput()))
-println("part 2: ", part2(getInput()))
+println("part 1: ", part1())
+println("part 2: ", part2())
