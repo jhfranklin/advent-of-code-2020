@@ -3,14 +3,13 @@ using AdventOfCode2020
 getInput() = split(read(getInputPath(6), String), "\n\n")
 
 function getUniqueQuestions(row)
-    questionSet = setdiff(Set(row), Set('\n'))
+    questionSet = setdiff(row, '\n')
     return questionSet
 end
 
 function getAnsweredByAll(row)
-    Qs = getUniqueQuestions(row)
     passengers = split(row, '\n', keepempty=false)
-    [intersect!(Qs,Set(pass)) for pass ∈ passengers]
+    Qs = intersect(passengers...)
     return Qs
 end
 
