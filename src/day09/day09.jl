@@ -29,3 +29,13 @@ function findset(input,numtosearch)
         end
     end
 end
+
+part1() = getInput() |> checksumwindow
+
+function part2()
+    input = getInput()
+    return findset(input, part1())
+end
+
+println("part 1:", part1())
+println("part 2:", part2())
