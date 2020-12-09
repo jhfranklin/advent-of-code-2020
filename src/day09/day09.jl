@@ -15,8 +15,17 @@ end
 
 function findset(input,numtosearch)
     N = length(input)
-    for i ∈ 1:N, j ∈ (i+1):N
+    i = 1
+    j = 2
+    while true
         window = input[i:j]
-        sum(window) == numtosearch && return maximum(window) + minimum(window)
+        s = sum(window)
+        if s > numtosearch
+            i += 1
+        elseif s < numtosearch
+            j += 1
+        else
+            return sum(extrema(window))
+        end
     end
 end
