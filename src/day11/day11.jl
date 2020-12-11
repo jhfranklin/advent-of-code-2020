@@ -19,22 +19,12 @@ end
 
 function getvisible(cell, array)
     arraySize = size(array)
-    directions = Dict{Symbol,CartesianIndex{2}}(
-        :N => CartesianIndex(-1, 0),
-        :S => CartesianIndex(1, 0),
-        :E => CartesianIndex(0, 1),
-        :W => CartesianIndex(0, -1),
-        :NE => CartesianIndex(-1, 1),
-        :NW => CartesianIndex(-1, -1),
-        :SE => CartesianIndex(1, 1),
-        :SW => CartesianIndex(1, -1)
-    )
+    directions = CartesianIndex.([(-1, 0), (1, 0), (0, 1), (0, -1), (-1, 1), (-1, -1), (1, 1), (1, -1)])
     visible = Char[]
-    for d ∈ keys(directions)
-        c = directions[d]
+    for d ∈ directions
         currentCell = cell
         while true
-            currentCell += c
+            currentCell += d
             !ingrid(currentCell, arraySize) && break
             seat = array[currentCell]
             if seat ∈ ['#', 'L'] 
