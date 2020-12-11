@@ -9,7 +9,7 @@ function getneighbours(cell, array)
     arraySize = size(array)
     xcells = filter(a->a ∈ 1:arraySize[1],cell[1] .+ [-1 0 1])
     ycells = filter(a->a ∈ 1:arraySize[2],cell[2] .+ [-1 0 1])
-    indices = [CartesianIndex(x, y) for x ∈ xcells, y ∈ ycells if CartesianIndex(x,y) != cell]
+    indices = [CartesianIndex(x, y) for x ∈ xcells, y ∈ ycells if CartesianIndex(x, y) != cell]
     return array[indices]
 end
 
@@ -20,14 +20,14 @@ end
 function getvisible(cell, array)
     arraySize = size(array)
     directions = Dict{Symbol,CartesianIndex{2}}(
-        :N => CartesianIndex(-1,0),
-        :S => CartesianIndex(1,0),
-        :E => CartesianIndex(0,1),
-        :W => CartesianIndex(0,-1),
-        :NE => CartesianIndex(-1,1),
-        :NW => CartesianIndex(-1,-1),
-        :SE => CartesianIndex(1,1),
-        :SW => CartesianIndex(1,-1)
+        :N => CartesianIndex(-1, 0),
+        :S => CartesianIndex(1, 0),
+        :E => CartesianIndex(0, 1),
+        :W => CartesianIndex(0, -1),
+        :NE => CartesianIndex(-1, 1),
+        :NW => CartesianIndex(-1, -1),
+        :SE => CartesianIndex(1, 1),
+        :SW => CartesianIndex(1, -1)
     )
     visible = Char[]
     for d ∈ keys(directions)
@@ -46,7 +46,6 @@ function getvisible(cell, array)
     return visible
 end
 
-
 function updatecell(cell, neighbours, emptyRule)
     if cell == 'L'
         if isempty(findall(isequal('#'), neighbours))
@@ -64,7 +63,7 @@ function nextstep(array, emptyrule, adjacent=true)
     newArray = copy(array)
     indices = CartesianIndices(array)
     for cell in eachindex(indices)
-        neighbours = adjacent ? getneighbours(cell, array) : getvisible(cell,array)
+        neighbours = adjacent ? getneighbours(cell, array) : getvisible(cell, array)
         current = array[cell]
         newArray[cell] = updatecell(current, neighbours ,emptyrule)
     end
