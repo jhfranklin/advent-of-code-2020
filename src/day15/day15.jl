@@ -4,49 +4,27 @@ function parseinput(x)
     return parse.(Int, split(x,','))
 end
 
-function part1(input)
-    numbers = parseinput(input)
-    numberDict = Dict{Int, Tuple{Int,Int}}()
-    # init number dict
-    for (i, num) ∈ enumerate(numbers)
-        numberDict[num] = (i, i)
+function getnumber(input, N)
+    startingNumbers = parseinput(input)
+    numbers = zeros(Int,N)
+    # init number array
+    for (i, num) ∈ enumerate(startingNumbers)
+        numbers[num+1] = i
     end
-    lastNumberSpoken = numbers[end]
-    currentIndex = length(numbers) + 1
-    for i ∈ currentIndex:2020
-        turns = get(numberDict, lastNumberSpoken, nothing)
-        lastNumberSpoken = turns[2] - turns[1]
-        if haskey(numberDict, lastNumberSpoken)
-            previous = numberDict[lastNumberSpoken]
-            numberDict[lastNumberSpoken] = (previous[2], i)
+    currentNumber = 0
+    nextNumber = 0
+    currentTurn = length(startingNumbers) + 1
+    for turn ∈ currentTurn:(N-1)
+        if numbers[currentNumber+1] != 0
+            nextNumber = turn - numbers[currentNumber+1]
         else
-            numberDict[lastNumberSpoken] = (i, i)
+            nextNumber = 0
         end
+        numbers[currentNumber+1] = turn
+        currentNumber = nextNumber
     end
-    return lastNumberSpoken
+    return nextNumber
 end
 
-function part2(input)
-    numbers = parseinput(input)
-    numberDict = Dict{Int, Tuple{Int,Int}}()
-    # init number dict
-    for (i, num) ∈ enumerate(numbers)
-        numberDict[num] = (i, i)
-    end
-    lastNumberSpoken = numbers[end]
-    currentIndex = length(numbers) + 1
-    for i ∈ currentIndex:30000000
-        turns = get(numberDict, lastNumberSpoken, nothing)
-        lastNumberSpoken = turns[2] - turns[1]
-        if haskey(numberDict, lastNumberSpoken)
-            previous = numberDict[lastNumberSpoken]
-            numberDict[lastNumberSpoken] = (previous[2], i)
-        else
-            numberDict[lastNumberSpoken] = (i, i)
-        end
-    end
-    return lastNumberSpoken
-end
-
-part1(input)
-part2(input)
+println("part 1: ", getnumber(input, 2020))
+println("part 2: ", getnumber(input, 30_000_000))
