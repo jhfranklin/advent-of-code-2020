@@ -65,10 +65,10 @@ function playround_recursive!(decks)
 end
 
 function playgame!(decks)
-    history = Set{Tuple{Vector{Int},Vector{Int}}}()
+    history = Set{UInt}()
     while true
-        decks ∈ history && return 1 # if we've seen this before, player 1 wins
-        push!(history,(copy(decks[1]), copy(decks[2]))) # add iteration to history
+        hash(decks) ∈ history && return 1 # if we've seen this before, player 1 wins
+        push!(history,hash(decks)) # add iteration to history
         playround_recursive!(decks)
         if length(decks[1]) == 0 
             return 2
