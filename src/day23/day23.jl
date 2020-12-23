@@ -1,4 +1,3 @@
-#rawInput = "389125467"
 rawInput = "853192647"
 
 input = [parse(Int, x) for x in rawInput]
@@ -23,17 +22,17 @@ next(cup::Cup) = cup.next
 prev(cup::Cup) = cup.prev
 
 function createcuplist(input)
-    cups = [Cup(x) for x in input]
-    for (i,cup) in enumerate(cups)
+    cups = [Cup(i) for i in 1:length(input)]
+    for (i,cupLabel) in enumerate(input)
         if i == 1
-            cup.next = cups[2]
-            cup.prev = cups[end]
+            cups[cupLabel].next = cups[input[2]]
+            cups[cupLabel].prev = cups[input[end]]
         elseif i == length(cups)
-            cup.next = cups[1]
-            cup.prev = cups[end-1]
+            cups[cupLabel].next = cups[input[1]]
+            cups[cupLabel].prev = cups[input[end-1]]
         else
-            cup.next = cups[i+1]
-            cup.prev = cups[i-1]
+            cups[cupLabel].next = cups[input[i+1]]
+            cups[cupLabel].prev = cups[input[i-1]]
         end
     end
     return cups
@@ -41,16 +40,16 @@ end
 
 function createcuplist(input,maxCupLabel)
     cups = createcuplist(input)
-    firstCup = cups[1]
-    previousCup = cups[end]
+    firstCup = cups[input[1]]
+    previousCup = cups[input[end]]
     nextCupLabel = maximum(input) + 1
     for i = nextCupLabel:maxCupLabel
-        newCup = Cup(i, cups[1], cups[end])
-        cups[end].next = newCup
+        newCup = Cup(i, firstCup, previousCup)
+        previousCup.next = newCup
+        previousCup = newCup
         push!(cups, newCup)
     end
     firstCup.prev = cups[end]
-    previousCup.next = cups[nextCupLabel]
     return cups
 end
 
@@ -63,41 +62,38 @@ function getnextcups(currentCup)
     return nextCups
 end
 
-const EMPTY_CUP = Cup(0)
-
-function move!(currentCup, numCups)
+function move!(currentCup, cups)
     # pick up three cups and relink main list
     nextCups = getnextcups(currentCup)
     currentCup.next = nextCups[end].next
     nextCups[end].next.prev = currentCup
     # find destination cup
     currentCupLabel = currentCup.label
-    destinationCupLabel = mod1(currentCupLabel - 1, numCups)
-    nextCupToTest = currentCup.next
-    destinationCup = EMPTY_CUP
-    while true
-        if nextCupToTest == currentCup || nextCupToTest ∈ nextCups
-            destinationCupLabel = mod1(destinationCupLabel - 1, numCups)
-        elseif nextCupToTest.label == destinationCupLabel
-            destinationCup = nextCupToTest
-            break
+    destinationCupLabel = mod1(currentCupLabel - 1, length(cups))
+    found = false
+    destinationCup = cups[destinationCupLabel]
+    while !found
+        destinationCup = cups[destinationCupLabel]
+        if destinationCup ∉ nextCups
+            found = true
+        else
+            destinationCupLabel = mod1(destinationCupLabel - 1, length(cups))
         end
-        nextCupToTest = nextCupToTest.next
     end
     # place cups
     destinationCup.next.prev = nextCups[end]
     nextCups[end].next = destinationCup.next
     destinationCup.next = nextCups[1]
     nextCups[1].prev = destinationCup
-    return currentCup = currentCup.next
+    currentCup = currentCup.next
+    return currentCup
 end
 
 function part1(input)
     cups = createcuplist(input)
-    currentCup = cups[1]
-    numCups = length(input)
+    currentCup = cups[input[1]]
     for i = 1:100
-        currentCup = move!(currentCup, numCups)
+        currentCup = move!(currentCup, cups)
     end
     output = ""
     while true
@@ -115,9 +111,9 @@ end
 
 function part2(input)
     cups = createcuplist(input,1_000_000)
-    currentCup = cups[1]
+    currentCup = cups[input[1]]
     for i = 1:10_000_000
-        currentCup = move!(currentCup, 10_000_000)
+        currentCup = move!(currentCup, cups)
     end
     while true
         labelToSearch = 1
@@ -128,5 +124,5 @@ function part2(input)
     end
 end
 
-part1(input)
-#part2(input)
+println("part 1: ", part1(input))
+println("part 2: ", part2(input))
