@@ -35,6 +35,34 @@ function removeunitproductions!(rules)
     return rules
 end
 
+function findthreeproductions(rules)
+    threeProductions = Dict{String,Vector{Vector{String}}}()
+    for (k, v) ∈ rules
+        for p ∈ v
+            if length(p) == 3
+                x = get(threeProductions, k, Vector{Vector{String}}())
+                threeProductions[k] = push!(x, p)
+            end
+        end
+    end
+    return threeProductions
+end
+
+function removethreeproductions!(rules)
+    threeProductions = findthreeproductions(rules)
+    for (A, p) ∈ threeProductions
+        for X ∈ p
+            newRule = A * "new"
+            rules[newRule] = [[X[2], X[3]]]
+            productionsToAdd = [X[1], newRule]
+            currentProductions = rules[A]
+            filter!(!isequal(X),currentProductions) 
+            rules[A] = push!(currentProductions, productionsToAdd) # add rules
+        end
+    end
+    return rules
+end
+
 function parserules(rawRules)
     rules = Dict{String,Vector{Vector{String}}}()
     rx = r"(\d+): (.*)"
@@ -110,4 +138,21 @@ function part1()
     return cnt
 end
 
-part1()
+function part2()
+    (rawRules, messages) = splitinput(getinput())
+    rules = parserules(rawRules)
+    rules["8"] = [["42"], ["42", "8"]]
+    rules["11"] = [["42", "31"], ["42", "11", "31"]]
+    grammar = rules |> removeunitproductions! |> removethreeproductions! |> partitionrules
+    rule0(x) = CYK(x,grammar)
+    cnt = 0
+    for m ∈ messages
+        if rule0(m)
+            cnt += 1
+        end
+    end
+    return cnt
+end
+
+println("part 1: ", part1())
+println("part 2: ", part2())
